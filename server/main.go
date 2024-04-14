@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
 	"github.com/mrspec7er/license-request/server/internal"
+	"github.com/mrspec7er/license-request/server/internal/db"
 )
 
 func init() {
@@ -18,17 +16,15 @@ func init() {
 }
 
 func main() {
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT")))
-	if err != nil {
-		panic(err)
-	}
+	DB := db.StartConnection()
 
 	config := &internal.Server{
-		DB: db,
+		DB: DB,
 	}
 
 	server := internal.NewServer(*config)
-	err = server.ListenAndServe()
+
+	err := server.ListenAndServe()
 	if err != nil {
 		panic(fmt.Sprintf("cannot start server: %s", err))
 	}
