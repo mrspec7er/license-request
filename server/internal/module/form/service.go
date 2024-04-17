@@ -1,7 +1,7 @@
 package form
 
 import (
-	"github.com/mrspec7er/license-request/server/internal/dto"
+	"github.com/mrspec7er/license-request/server/internal/db"
 	"gorm.io/gorm"
 )
 
@@ -9,8 +9,8 @@ type FormService struct {
 	DB *gorm.DB
 }
 
-func (s FormService) GetAll(form *[]*dto.Form) (int, error) {
-	var err error
+func (s FormService) GetOne(form *db.Form) (int, error) {
+	err := s.DB.Preload("Sections").Preload("Sections.Fields").First(&form).Error
 
 	if err != nil {
 		return 500, err
