@@ -16,10 +16,10 @@ func init() {
 }
 
 func main() {
-	DB := db.StartConnection()
+	db := db.StartConnection()
 
 	config := &internal.Server{
-		DB: DB,
+		DB: db,
 	}
 
 	server := internal.NewServer(*config)

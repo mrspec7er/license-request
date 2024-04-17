@@ -5,11 +5,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/jmoiron/sqlx"
+	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB *sqlx.DB
+	DB *gorm.DB
 }
 
 func NewServer(s Server) *http.Server {
