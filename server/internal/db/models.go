@@ -6,33 +6,40 @@ import (
 	"gorm.io/gorm"
 )
 
+type BaseModel struct {
+	ID        uint           `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+}
+
 type Form struct {
-	gorm.Model
+	BaseModel
 	Name     string     `json:"name" gorm:"type:varchar(63); index:priority:1"`
 	Category string     `json:"category" gorm:"type:varchar(63)"`
 	Sections []*Section `json:"sections"`
 }
 
 type Section struct {
-	gorm.Model
-	FormID int64    `json:"form_id" gorm:"type:bigint"`
+	BaseModel
+	FormID int64    `json:"formId" gorm:"type:bigint"`
 	Name   string   `json:"name" gorm:"type:varchar(63)"`
 	Form   *Form    `json:"form"`
 	Fields []*Field `json:"fields"`
 }
 
 type Field struct {
-	gorm.Model
-	SectionID  int64       `json:"section_id" gorm:"type:bigint"`
-	Label      string      `json:"label" gorm:"type:varchar(255)"`
-	Type       string      `json:"type" gorm:"type:varchar(63)"`
-	FieldOrder int32       `json:"order" gorm:"type:int"`
-	Section    *Section    `json:"section"`
-	Responses  []*Response `json:"responses"`
+	BaseModel
+	SectionID  int64     `json:"sectionId" gorm:"type:bigint"`
+	Label      string    `json:"label" gorm:"type:varchar(255)"`
+	Type       string    `json:"type" gorm:"type:varchar(63)"`
+	FieldOrder int32     `json:"order" gorm:"type:int"`
+	Section    *Section  `json:"section"`
+	Responses  *Response `json:"responses"`
 }
 
 type Account struct {
-	gorm.Model
+	BaseModel
 	UID          string         `json:"uid" gorm:"type:varchar(255)"`
 	Name         string         `json:"name" gorm:"type:varchar(63)"`
 	Email        string         `json:"email" gorm:"type:varchar(63)"`
@@ -43,8 +50,8 @@ type Account struct {
 
 type Application struct {
 	Number    string      `json:"number" gorm:"primaryKey; index:priority:1; type:varchar(63)"`
-	FormID    int64       `json:"form_id" gorm:"type:bigint"`
-	AccountID int64       `json:"account_id" gorm:"type:bigint"`
+	FormID    int64       `json:"formId" gorm:"type:bigint"`
+	AccountID int64       `json:"accountId" gorm:"type:bigint"`
 	Form      *Form       `json:"form"`
 	Account   *Account    `json:"account"`
 	Responses []*Response `json:"responses" gorm:"foreignKey:ApplicationNumber;references:Number"`
@@ -54,9 +61,9 @@ type Application struct {
 }
 
 type Response struct {
-	gorm.Model
-	ApplicationNumber string       `json:"application_number" gorm:"type:varchar(63)"`
-	FieldID           string       `json:"field_id" gorm:"type:bigint"`
+	BaseModel
+	ApplicationNumber string       `json:"applicationNumber" gorm:"type:varchar(63)"`
+	FieldID           int64        `json:"field_id" gorm:"type:bigint"`
 	Value             string       `json:"value" gorm:"type:text"`
 	Application       *Application `json:"application"`
 	Field             *Field       `json:"field"`
