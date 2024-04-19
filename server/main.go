@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mrspec7er/license-request/server/internal"
 	"github.com/mrspec7er/license-request/server/internal/db"
+	"github.com/mrspec7er/license-request/server/internal/util"
 )
 
 func init() {
@@ -16,6 +17,7 @@ func init() {
 }
 
 func main() {
+	util.AuthInit()
 	db := db.StartConnection()
 
 	config := &internal.Server{

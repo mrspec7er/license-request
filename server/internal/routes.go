@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/mrspec7er/license-request/server/internal/module/application"
+	"github.com/mrspec7er/license-request/server/internal/module/auth"
 	"github.com/mrspec7er/license-request/server/internal/module/form"
 )
 
@@ -22,6 +23,7 @@ func (s Server) RegisterRoutes() http.Handler {
 
 	router.Route("/forms", form.Module(s.DB))
 	router.Route("/apps", application.Module(s.DB))
+	router.Route("/auth", auth.Module(s.DB))
 
 	return router
 }
