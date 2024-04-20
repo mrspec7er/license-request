@@ -6,9 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	auth "github.com/mrspec7er/license-request/service/user/internal/src"
-	"github.com/mrspec7er/license-request/service/user/internal/src/application"
-	"github.com/mrspec7er/license-request/service/user/internal/src/form"
+	"github.com/mrspec7er/license-request/service/user/internal/src"
 )
 
 func (s Server) RegisterRoutes() http.Handler {
@@ -20,10 +18,7 @@ func (s Server) RegisterRoutes() http.Handler {
 		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(map[string]string{"message": "Hello There!"})
 	})
-
-	router.Route("/forms", form.Module(s.DB))
-	router.Route("/apps", application.Module(s.DB))
-	router.Route("/auth", auth.Module(s.DB))
+	router.Route("/auth", src.Module(s.DB))
 
 	return router
 }

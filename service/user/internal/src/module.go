@@ -1,4 +1,4 @@
-package auth
+package src
 
 import (
 	"github.com/go-chi/chi/v5"
