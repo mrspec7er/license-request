@@ -6,9 +6,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	auth "github.com/mrspec7er/license-request/user/internal/src"
-	"github.com/mrspec7er/license-request/user/internal/src/application"
-	"github.com/mrspec7er/license-request/user/internal/src/form"
+	auth "github.com/mrspec7er/license-request/service/user/internal/src"
+	"github.com/mrspec7er/license-request/service/user/internal/src/application"
+	"github.com/mrspec7er/license-request/service/user/internal/src/form"
 )
 
 func (s Server) RegisterRoutes() http.Handler {

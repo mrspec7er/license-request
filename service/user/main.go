@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/joho/godotenv"
-	"github.com/mrspec7er/license-request/user/internal"
-	"github.com/mrspec7er/license-request/user/internal/db"
+	"github.com/mrspec7er/license-request/service/user/internal"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 )
 
 func init() {

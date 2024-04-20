@@ -1,7 +1,7 @@
 package form
 
 import (
-	"github.com/mrspec7er/license-request/user/internal/db"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 	"gorm.io/gorm"
 )
 

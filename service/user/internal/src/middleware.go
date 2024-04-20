@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/mrspec7er/license-request/user/internal/db"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 )
 
 type AuthMiddleware struct {

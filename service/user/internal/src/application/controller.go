@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mrspec7er/license-request/user/internal/db"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 )
 
 type ApplicationController struct {

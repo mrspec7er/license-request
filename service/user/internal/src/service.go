@@ -9,7 +9,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
-	"github.com/mrspec7er/license-request/user/internal/db"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 	"gorm.io/gorm"
 )
 
