@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"text/template"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
+	"github.com/mrspec7er/license-request/service/user/internal/db"
 )
 
 type AuthController struct {
@@ -22,7 +25,8 @@ func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *AuthController) Callback(w http.ResponseWriter, r *http.Request) {
-	user, err := c.Service.SaveUserSessions(w, r)
+	user := &goth.User{}
+	err := c.Service.StoreUserSessions(w, r, user)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
@@ -31,6 +35,22 @@ func (c *AuthController) Callback(w http.ResponseWriter, r *http.Request) {
 	}
 	t, _ := template.ParseFiles("templates/success.html")
 	t.Execute(w, user)
+}
+
+func (c *AuthController) Info(w http.ResponseWriter, r *http.Request) {
+	authKey := chi.URLParam(r, "authKey")
+	user := &db.User{}
+
+	err := c.Service.RetrieveUserSessions(w, r, authKey, user)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(user)
 }
 
 func (c *AuthController) Logout(w http.ResponseWriter, r *http.Request) {

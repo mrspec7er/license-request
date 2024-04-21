@@ -16,10 +16,12 @@ func init() {
 }
 
 func main() {
-	db := db.StartConnection()
+	DB := db.StartConnection()
+	Memcache := db.MemcacheConnection()
 
 	config := &internal.Server{
-		DB: db,
+		DB:       DB,
+		Memcache: Memcache,
 	}
 
 	server := internal.NewServer(*config)

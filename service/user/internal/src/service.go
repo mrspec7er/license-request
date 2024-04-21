@@ -1,9 +1,11 @@
 package src
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
@@ -41,6 +43,7 @@ func AuthInit() *sessions.CookieStore {
 type AuthService struct {
 	DB    *gorm.DB
 	Store *sessions.CookieStore
+	Util  *AuthUtility
 }
 
 func (s AuthService) GetUserEmail(r *http.Request, userEmail *string) error {
@@ -83,6 +86,54 @@ func (s AuthService) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*
 	session.Save(r, w)
 
 	return &user, nil
+}
+
+func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, user *goth.User) error {
+	data, err := gothic.CompleteUserAuth(w, r)
+	if err != nil {
+		return err
+	}
+
+	key := data.UserID + "-" + time.Now().Local().String()
+
+	err = s.Util.Store(context.Background(), key, data.RawData)
+	if err != nil {
+		return err
+	}
+
+	cookie := http.Cookie{
+		Name:     "auth",
+		Value:    key,
+		Path:     "/",
+		MaxAge:   7200,
+		HttpOnly: false,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
+	*user = data
+
+	return nil
+}
+
+func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *db.User) error {
+
+	var data map[string]interface{}
+	err := s.Util.Retrieve(context.Background(), key, &data)
+	if err != nil {
+		return err
+	}
+
+	uid := data["id"].(string)
+	email := data["email"].(string)
+	*user = db.User{
+		UID:   uid,
+		Email: email,
+	}
+
+	return nil
 }
 
 func (s AuthService) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
