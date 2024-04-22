@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/mrspec7er/license-request/services/form/internal/db"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 )
 
 type FormController struct {
@@ -12,7 +12,7 @@ type FormController struct {
 }
 
 func (c FormController) GetAll(w http.ResponseWriter, r *http.Request) {
-	forms := &db.Form{}
+	forms := &dto.Form{}
 
 	status, err := c.Service.GetOne(forms)
 	if err != nil {
