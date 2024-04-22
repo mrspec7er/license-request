@@ -11,7 +11,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
-	"github.com/mrspec7er/license-request/service/user/internal/db"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 	"gorm.io/gorm"
 )
 
@@ -62,7 +62,7 @@ func (s AuthService) GetUserEmail(r *http.Request, userEmail *string) error {
 	return nil
 }
 
-func (s AuthService) FindUser(user *db.User) (int, error) {
+func (s AuthService) FindUser(user *dto.User) (int, error) {
 	err := s.DB.Where("email = ?", user.Email).First(&user).Error
 
 	if err != nil {
@@ -118,7 +118,7 @@ func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, u
 	return nil
 }
 
-func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *db.User) error {
+func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
 
 	var data map[string]interface{}
 	err := s.Util.Retrieve(context.Background(), key, &data)
@@ -128,7 +128,7 @@ func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request
 
 	uid := data["id"].(string)
 	email := data["email"].(string)
-	*user = db.User{
+	*user = dto.User{
 		UID:   uid,
 		Email: email,
 	}

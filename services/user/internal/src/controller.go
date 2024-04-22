@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
-	"github.com/mrspec7er/license-request/services/user/internal/db"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 )
 
 type AuthController struct {
@@ -39,7 +39,7 @@ func (c *AuthController) Callback(w http.ResponseWriter, r *http.Request) {
 
 func (c *AuthController) Info(w http.ResponseWriter, r *http.Request) {
 	authKey := chi.URLParam(r, "authKey")
-	user := &db.User{}
+	user := &dto.User{}
 
 	err := c.Service.RetrieveUserSessions(w, r, authKey, user)
 	if err != nil {

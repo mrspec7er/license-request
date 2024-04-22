@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/mrspec7er/license-request/services/user/internal/db"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 )
 
 type AuthMiddleware struct {
@@ -26,7 +26,7 @@ func (m AuthMiddleware) Authorize(roles ...string) func(http.Handler) http.Handl
 				return
 			}
 
-			user := &db.User{Email: userEmail}
+			user := &dto.User{Email: userEmail}
 
 			status, err := m.Service.FindUser(user)
 			if err != nil {

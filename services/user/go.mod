@@ -11,7 +11,10 @@ require (
 	github.com/redis/go-redis/v9 v9.5.1
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.9
+	github.com/mrspec7er/license-request/services/utility v0.0.0
 )
+
+replace github.com/mrspec7er/license-request/services/utility v0.0.0 => ../utility
 
 require (
 	cloud.google.com/go/compute v1.20.1 // indirect

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,7 +20,7 @@ func StartConnection() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-		&User{},
+		&dto.User{},
 	)
 
 	return db
