@@ -8,7 +8,10 @@ require (
 	github.com/lib/pq v1.10.9
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.9
+	github.com/mrspec7er/license-request/services/utility v0.0.0
 )
+
+replace github.com/mrspec7er/license-request/services/utility v0.0.0 => ../utility
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect

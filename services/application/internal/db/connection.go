@@ -17,10 +17,5 @@ func StartConnection() *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(
-		&Application{},
-		&Response{},
-	)
-
 	return db
 }

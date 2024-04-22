@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mrspec7er/license-request/services/application/internal/db"
+	"github.com/mrspec7er/license-request/services/utility/dto"
 )
 
 type ApplicationController struct {
@@ -14,7 +14,7 @@ type ApplicationController struct {
 
 func (c ApplicationController) GetAll(w http.ResponseWriter, r *http.Request) {
 	number := chi.URLParam(r, "number")
-	app := db.Form{}
+	app := dto.Form{}
 
 	status, err := c.Service.GetOne(&app, number)
 	if err != nil {
