@@ -120,17 +120,9 @@ func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, u
 
 func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
 
-	var data map[string]interface{}
-	err := s.Util.Retrieve(context.Background(), key, &data)
+	err := s.Util.Retrieve(context.Background(), key, &user)
 	if err != nil {
 		return err
-	}
-
-	uid := data["id"].(string)
-	email := data["email"].(string)
-	*user = dto.User{
-		UID:   uid,
-		Email: email,
 	}
 
 	return nil

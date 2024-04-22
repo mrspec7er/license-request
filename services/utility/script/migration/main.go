@@ -83,27 +83,27 @@ func SeedDatabase(DB *gorm.DB) {
 
 	DB.Create([]*dto.User{
 		{
-			BaseModel: dto.BaseModel{ID: 1},
-			UID:       "ADMIN-1",
-			Name:      "User Admin",
-			Email:     "admin@email.com",
-			Password:  "",
-			Role:      "ADMIN",
+			ID:            "ADMIN-001",
+			Email:         "admin@email.com",
+			Picture:       "https://lh3.googleusercontent.com/a-/ALV-UjUiYmyOrvOAaQsnGfnVDs6QrtTn7sLD5ICee2OcVz32pAi6Pwj1=s96-c",
+			VerifiedEmail: true,
+			Password:      "",
+			Role:          "ADMIN",
 		},
 		{
-			BaseModel: dto.BaseModel{ID: 2},
-			UID:       "User-1",
-			Name:      "Basic User",
-			Email:     "user@email.com",
-			Password:  "",
-			Role:      "USER",
+			ID:            "USER-001",
+			Email:         "user@email.com",
+			Picture:       "https://lh3.googleusercontent.com/a-/ALV-UjUiYmyOrvOAaQsnGfnVDs6QrtTn7sLD5ICee2OcVz32pAi6Pwj1=s96-c",
+			VerifiedEmail: true,
+			Password:      "",
+			Role:          "USER",
 		},
 	})
 
 	DB.Create([]*dto.Application{
 		{
 			Number: "DRV-001",
-			UserID: 1,
+			UserID: "USER-001",
 			FormID: 1,
 			Responses: []*dto.Response{
 				{
@@ -140,7 +140,7 @@ func SeedDatabase(DB *gorm.DB) {
 		},
 		{
 			Number: "DRV-002",
-			UserID: 1,
+			UserID: "USER-001",
 			FormID: 1,
 			Responses: []*dto.Response{
 				{

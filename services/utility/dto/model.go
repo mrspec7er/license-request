@@ -39,19 +39,22 @@ type Field struct {
 }
 
 type User struct {
-	BaseModel
-	UID          string         `json:"uid" gorm:"type:varchar(255)"`
-	Name         string         `json:"name" gorm:"type:varchar(63)"`
-	Email        string         `json:"email" gorm:"type:varchar(63)"`
-	Password     string         `json:"password" gorm:"type:text"`
-	Role         string         `json:"role" gorm:"type:varchar(63)"`
-	Applications []*Application `json:"applications"`
+	ID            string         `json:"id" gorm:"type:varchar(255)"`
+	Picture       string         `json:"picture" gorm:"type:text"`
+	Email         string         `json:"email" gorm:"type:varchar(63)"`
+	VerifiedEmail bool           `json:"verified_email"`
+	Password      string         `json:"password" gorm:"type:text"`
+	Role          string         `json:"role" gorm:"type:varchar(63)"`
+	Applications  []*Application `json:"applications" gorm:"foreignKey:UserID;references:ID"`
+	CreatedAt     time.Time      `json:"createdAt"`
+	UpdatedAt     time.Time      `json:"updatedAt"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 }
 
 type Application struct {
 	Number    string      `json:"number" gorm:"primaryKey; index:priority:1; type:varchar(63)"`
 	FormID    int64       `json:"formId" gorm:"type:bigint"`
-	UserID    int64       `json:"userId" gorm:"type:bigint"`
+	UserID    string      `json:"userId" gorm:"type:bigint"`
 	Form      *Form       `json:"form"`
 	User      *User       `json:"user"`
 	Responses []*Response `json:"responses" gorm:"foreignKey:ApplicationNumber;references:Number"`
