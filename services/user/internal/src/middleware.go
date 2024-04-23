@@ -43,7 +43,7 @@ func (m AuthMiddleware) Authorize(roles ...string) func(http.Handler) http.Handl
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), UserContextKey, user)
+			ctx := context.WithValue(r.Context(), dto.UserContextKey, user)
 			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	})

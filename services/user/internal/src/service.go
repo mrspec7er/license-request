@@ -15,12 +15,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type key string
-
-const (
-	UserContextKey key = "user"
-)
-
 func AuthInit() *sessions.CookieStore {
 	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 	maxAge := 86400 * 1 // 1 days
@@ -47,7 +41,7 @@ type AuthService struct {
 }
 
 func (s AuthService) GetUserEmail(r *http.Request, userEmail *string) error {
-	session, err := s.Store.Get(r, "auth")
+	session, err := s.Store.Get(r, string(dto.AuthCookieName))
 	if err != nil {
 		return err
 	}
@@ -78,7 +72,7 @@ func (s AuthService) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*
 		return nil, err
 	}
 
-	session, err := s.Store.Get(r, "auth")
+	session, err := s.Store.Get(r, string(dto.AuthCookieName))
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +96,7 @@ func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, u
 	}
 
 	cookie := http.Cookie{
-		Name:     "auth",
+		Name:     string(dto.AuthCookieName),
 		Value:    key,
 		Path:     "/",
 		MaxAge:   7200,
@@ -129,7 +123,7 @@ func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request
 }
 
 func (s AuthService) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
-	session, _ := s.Store.Get(r, "auth")
+	session, _ := s.Store.Get(r, string(dto.AuthCookieName))
 	session.Values["email"] = nil
 	session.Save(r, w)
 	gothic.Logout(w, r)
