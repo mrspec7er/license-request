@@ -6,7 +6,8 @@ import (
 )
 
 type ApplicationService struct {
-	DB *gorm.DB
+	DB   *gorm.DB
+	Util *ApplicationUtil
 }
 
 func (s ApplicationService) GetOne(app *dto.Form, number string) (int, error) {

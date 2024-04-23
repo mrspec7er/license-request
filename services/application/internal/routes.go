@@ -19,7 +19,7 @@ func (s Server) RegisterRoutes() http.Handler {
 		json.NewEncoder(w).Encode(map[string]string{"message": "Hello There!"})
 	})
 
-	router.Route("/applications", src.Module(s.DB))
+	router.Route("/applications", src.Module(s.DB, s.Memcache))
 
 	return router
 }

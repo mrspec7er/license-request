@@ -2,6 +2,7 @@ package src
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -15,6 +16,10 @@ type ApplicationController struct {
 func (c ApplicationController) GetAll(w http.ResponseWriter, r *http.Request) {
 	number := chi.URLParam(r, "number")
 	app := dto.Form{}
+
+	user := r.Context().Value(dto.UserContextKey).(dto.User)
+
+	fmt.Println("Sender Request", user.ID)
 
 	status, err := c.Service.GetOne(&app, number)
 	if err != nil {
