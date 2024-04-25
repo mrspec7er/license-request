@@ -1,6 +1,8 @@
 FROM golang:1.22.2-bookworm
 
-WORKDIR /services/utility
+WORKDIR /services/user
+
+COPY ../utility ../
 
 COPY go.mod go.sum ./
 
@@ -12,6 +14,6 @@ RUN go install github.com/zzwx/fresh@latest
 
 RUN chmod +x ./start.sh
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["./start.sh"]

@@ -37,6 +37,8 @@ services:
       dockerfile: Dockerfile
     container_name: utility
     restart: always
+    volumes:
+      - service_util:./
     develop:
       watch:
         - action: sync
@@ -47,6 +49,32 @@ services:
             - tmp
         - action: rebuild
           path: ./services/utility/go.mod
+
+  user:
+    depends_on:
+      database:
+        condition: service_healthy
+      memcache:
+        condition: service_healthy
+      utility:
+        condition: service_completed_successfully
+    build:
+      context: ./services
+      dockerfile: user.dockerfile
+    container_name: user
+    restart: always
+    volumes:
+      - service_util:./service/utility
+    develop:
+      watch:
+        - action: sync
+          path: ./services/user
+          target: /services/user
+          ignore:
+            - main
+            - tmp
+        - action: rebuild
+          path: ./services/user/go.mod
 
   # hub:
   #   build: ./hub
@@ -70,3 +98,4 @@ services:
 
 volumes:
   db:
+  service_util:
