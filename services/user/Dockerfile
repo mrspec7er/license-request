@@ -2,8 +2,6 @@ FROM golang:1.22.2-bookworm
 
 WORKDIR /services/user
 
-COPY ../utility ../
-
 COPY go.mod go.sum ./
 
 RUN go mod download

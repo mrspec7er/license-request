@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
-	"github.com/mrspec7er/license-request/services/utility/dto"
+	"github.com/mrspec7er/license-request-utility/dto"
 )
 
 type AuthController struct {

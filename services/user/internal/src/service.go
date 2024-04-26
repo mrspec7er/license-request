@@ -11,7 +11,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
-	"github.com/mrspec7er/license-request/services/utility/dto"
+	"github.com/mrspec7er/license-request-utility/dto"
 	"gorm.io/gorm"
 )
 
