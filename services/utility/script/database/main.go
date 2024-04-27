@@ -28,7 +28,7 @@ func CreateDB() *gorm.DB {
 		panic(err)
 	}
 
-	cmd := fmt.Sprintf("CREATE DATABASE %s", os.Getenv("DB_NAME"))
+	cmd := fmt.Sprintf("SELECT 'CREATE DATABASE %s' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '%s')", os.Getenv("DB_NAME"), os.Getenv("DB_NAME"))
 	db.Exec(cmd)
 
 	fmt.Println("Database created!")
