@@ -6,6 +6,8 @@ ENV POSTGRES_USER postgres
 
 ENV POSTGRES_PASSWORD mrc201
 
+COPY init.sql .env /docker-entrypoint-initdb.d/
+
 VOLUME /var/lib/postgresql/data
 
 EXPOSE 5432
