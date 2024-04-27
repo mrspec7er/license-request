@@ -2,13 +2,11 @@ FROM golang:1.22.2-bookworm
 
 WORKDIR /services/utility
 
-COPY go.mod go.sum ./
+RUN git clone https://github.com/mrspec7er/license-request-utility .
+
+COPY .env ./
 
 RUN go mod download
-
-COPY . .
-
-RUN go install github.com/zzwx/fresh@latest
 
 RUN chmod +x ./start.sh
 
