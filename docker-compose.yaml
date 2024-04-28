@@ -74,6 +74,32 @@ services:
         - action: rebuild
           path: ./services/user/go.mod
 
+  form:
+    depends_on:
+      database:
+        condition: service_healthy
+      memcache:
+        condition: service_healthy
+      utility:
+        condition: service_started
+    build:
+      context: ./services/form
+      dockerfile: Dockerfile
+    container_name: form
+    restart: always
+    ports:
+      - 8081:8081
+    develop:
+      watch:
+        - action: sync
+          path: ./services/form
+          target: /services/form
+          ignore:
+            - main
+            - tmp
+        - action: rebuild
+          path: ./services/form/go.mod
+
   # hub:
   #   build: ./hub
   #   container_name: hub
