@@ -6,13 +6,11 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
-	github.com/mrspec7er/license-request/services/utility v0.0.0
+	github.com/mrspec7er/license-request-utility v1.0.7
 	github.com/redis/go-redis/v9 v9.5.1
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.9
 )
-
-replace github.com/mrspec7er/license-request/services/utility v0.0.0 => ../utility
 
 require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect

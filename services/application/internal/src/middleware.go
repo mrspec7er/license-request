@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/mrspec7er/license-request/services/utility/dto"
+	"github.com/mrspec7er/license-request-utility/dto"
 )
 
 type ApplicationMiddleware struct {
