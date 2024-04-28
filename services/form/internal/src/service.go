@@ -1,7 +1,7 @@
 package src
 
 import (
-	"github.com/mrspec7er/license-request/services/utility/dto"
+	"github.com/mrspec7er/license-request-utility/dto"
 	"gorm.io/gorm"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/mrspec7er/license-request/services/utility/dto"
+	"github.com/mrspec7er/license-request-utility/dto"
 )
 
 type FormController struct {
