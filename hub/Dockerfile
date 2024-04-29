@@ -4,7 +4,7 @@ WORKDIR /hub
 
 ENV HOSTNAME my-rabbit
 
-# COPY api-definitions.json .
+COPY api-definitions.json .
 
 COPY start.sh .
 
