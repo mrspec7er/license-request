@@ -2,11 +2,17 @@ package internal
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"sync"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	form "github.com/mrspec7er/license-request/services/form/internal/src"
+	"github.com/mrspec7er/license-request/services/form/internal/src"
+	"github.com/rabbitmq/amqp091-go"
+	"gorm.io/gorm"
 )
 
 func (s Server) RegisterRoutes() http.Handler {
@@ -19,7 +25,25 @@ func (s Server) RegisterRoutes() http.Handler {
 		json.NewEncoder(w).Encode(map[string]string{"message": "Hello There!"})
 	})
 
-	router.Route("/forms", form.Module(s.DB))
+	router.Route("/forms", src.ControllerModule(s.DB))
 
 	return router
+}
+
+func (s Server) RegisterConsumersRoutes() {
+	wg := sync.WaitGroup{}
+
+	consumersRoutesConfig(s.Hub, &wg, s.DB)
+
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt)
+	<-sig
+
+	fmt.Println("Interrupt signal received. Closing consumers...")
+	wg.Wait()
+	fmt.Println("All consumers closed.")
+}
+
+func consumersRoutesConfig(conn *amqp091.Connection, wg *sync.WaitGroup, DB *gorm.DB) {
+	src.ConsumerModule(conn, wg, DB)
 }
