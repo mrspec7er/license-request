@@ -6,7 +6,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mrspec7er/license-request/services/form/internal"
 	"github.com/mrspec7er/license-request/services/form/internal/db"
-	"github.com/mrspec7er/license-request/services/form/internal/hub"
 )
 
 func init() {
@@ -18,19 +17,15 @@ func init() {
 
 func main() {
 	DB := db.StartConnection()
-	Hub := hub.StartConnection()
 
 	config := &internal.Server{
-		DB:  DB,
-		Hub: Hub,
+		DB: DB,
 	}
 
 	dbConn, err := DB.DB()
 	if err != nil {
 		panic(fmt.Sprintf("cannot start server: %s", err))
 	}
-
-	defer Hub.Close()
 	defer dbConn.Close()
 
 	server := internal.NewServer(*config)

@@ -5,17 +5,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/rabbitmq/amqp091-go"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB  *gorm.DB
-	Hub *amqp091.Connection
+	DB *gorm.DB
 }
 
 func NewServer(s Server) *http.Server {
-	go s.RegisterConsumersRoutes()
 
 	server := &http.Server{
 		Addr:         os.Getenv("PORT"),
