@@ -5,11 +5,13 @@ import (
 	"net/http"
 
 	"github.com/mrspec7er/license-request-utility/dto"
+	"github.com/mrspec7er/license-request-utility/response"
 )
 
 type Controller struct {
-	Service Service
-	Publish Publisher
+	Service  Service
+	Publish  Publisher
+	Response response.ResponseJSON
 }
 
 func (c Controller) GetAll(w http.ResponseWriter, r *http.Request) {
@@ -17,37 +19,26 @@ func (c Controller) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	status, err := c.Service.GetOne(forms)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(status)
-		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		c.Response.GeneralErrorHandler(w, status, err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(forms)
+	c.Response.QuerySuccessResponse(w, nil, forms, nil)
 }
 
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
-
 	form := &dto.Form{}
 
 	if err := json.NewDecoder(r.Body).Decode(&form); err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		c.Response.BadRequestHandler(w)
 		return
 	}
 
 	err := c.Publish.Create(*form, "123")
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		c.Response.GeneralErrorHandler(w, 500, err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Form created!"})
+	c.Response.MutationSuccessResponse(w, "Create form submitted")
 }
