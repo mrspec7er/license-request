@@ -1,6 +1,6 @@
 FROM golang:1.22.2-bookworm
 
-WORKDIR /services/user
+WORKDIR /services/application
 
 COPY go.mod go.sum ./
 
