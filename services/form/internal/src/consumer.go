@@ -15,6 +15,7 @@ import (
 
 type Consumer struct {
 	Service Service
+	Hub     Publisher
 }
 
 func (c Consumer) Load() {
@@ -42,30 +43,29 @@ func (c *Consumer) Create(ch *amqp091.Channel, wg *sync.WaitGroup, queue string,
 	defer wg.Done()
 
 	messages, err := ch.ConsumeWithContext(context.Background(), queue, tag, true, false, false, false, nil)
-
 	if err != nil {
-		fmt.Println("ERROR1 :", err)
+		c.Hub.PublishLog(500, "", nil, "Failed to get messages from queue")
 	}
 
 	for data := range messages {
 		uid, ok := data.Headers["uid"].(string)
 		if !ok {
-			fmt.Println("ERROR2 :", err)
+			c.Hub.PublishLog(400, "", nil, "User ID undefine")
 			continue
 		}
 
 		form := &dto.Form{}
-
 		err := json.Unmarshal(data.Body, &form)
 		if err != nil {
-			fmt.Println("ERROR3 :", err)
+			c.Hub.PublishLog(400, uid, form, "Invalid data type")
 			continue
 		}
 
 		status, err := c.Service.Create(form)
 		if err != nil {
-			fmt.Println("ERROR 4 :", status, uid, err)
+			c.Hub.PublishLog(status, uid, form, err.Error())
 			continue
 		}
+		c.Hub.PublishLog(status, uid, form, "Create Form")
 	}
 }

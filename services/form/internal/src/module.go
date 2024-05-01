@@ -29,6 +29,6 @@ func ControllerModule(DB *gorm.DB, Memcache *redis.Client) func(chi.Router) {
 
 	return func(r chi.Router) {
 		r.With(u.Authorize()).Get("/", ct.GetOne)
-		r.With(u.Authorize("ADMIN")).Post("/", ct.Create)
+		r.With(u.Authorize()).Post("/", ct.Create)
 	}
 }

@@ -2,6 +2,7 @@ package src
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"slices"
 
@@ -20,7 +21,7 @@ func (m Middleware) Authorize(roles ...string) func(http.Handler) http.Handler {
 			authKey, err := m.GetUserAuthKey(r)
 
 			if err != nil {
-				m.Response.BadRequestHandler(w)
+				m.Response.UnauthorizeUser(w)
 				return
 			}
 
@@ -28,12 +29,12 @@ func (m Middleware) Authorize(roles ...string) func(http.Handler) http.Handler {
 			err = m.RetrieveUserSessions(w, r, authKey, &user)
 
 			if err != nil {
-				m.Response.BadRequestHandler(w)
+				m.Response.GeneralErrorHandler(w, 403, errors.New("expired token"))
 				return
 			}
 
 			if len(roles) > 0 && !slices.Contains(roles, user.Role) {
-				m.Response.UnauthorizeUser(w)
+				m.Response.GeneralErrorHandler(w, 403, errors.New("user access denied"))
 				return
 			}
 

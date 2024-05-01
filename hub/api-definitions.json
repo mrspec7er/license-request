@@ -75,6 +75,15 @@
       "arguments": {
         "x-queue-type": "quorum"
       }
+    },
+    {
+      "name": "logger.create",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
     }
   ],
   "exchanges": [
@@ -125,6 +134,14 @@
       "destination": "form.delete",
       "destination_type": "queue",
       "routing_key": "form.delete",
+      "arguments": {}
+    },
+    {
+      "source": "logger",
+      "vhost": "/",
+      "destination": "logger.create",
+      "destination_type": "queue",
+      "routing_key": "logger.create",
       "arguments": {}
     }
   ]
