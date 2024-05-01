@@ -17,9 +17,11 @@ func init() {
 
 func main() {
 	DB := db.StartConnection()
+	Memcache := db.MemcacheConnection()
 
 	config := &internal.Server{
-		DB: DB,
+		DB:       DB,
+		Memcache: Memcache,
 	}
 
 	dbConn, err := DB.DB()

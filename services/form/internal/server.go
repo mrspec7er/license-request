@@ -5,11 +5,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB *gorm.DB
+	DB       *gorm.DB
+	Memcache *redis.Client
 }
 
 func NewServer(s Server) *http.Server {

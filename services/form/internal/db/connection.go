@@ -5,6 +5,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,4 +19,15 @@ func StartConnection() *gorm.DB {
 	}
 
 	return db
+}
+
+func MemcacheConnection() *redis.Client {
+	memcache := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_ADDRESS"),
+		Password: os.Getenv("REDIS_USERNAME"),
+		Username: os.Getenv("REDIS_PASSWORD"),
+		DB:       0,
+	})
+
+	return memcache
 }

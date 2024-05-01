@@ -14,7 +14,7 @@ type Controller struct {
 	Response response.ResponseJSON
 }
 
-func (c Controller) GetAll(w http.ResponseWriter, r *http.Request) {
+func (c Controller) GetOne(w http.ResponseWriter, r *http.Request) {
 	forms := &dto.Form{}
 
 	status, err := c.Service.GetOne(forms)
