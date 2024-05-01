@@ -28,3 +28,13 @@ func (s Service) Create(form *dto.Form) (int, error) {
 
 	return 200, nil
 }
+
+func (s Service) Delete(form *dto.Form) (int, error) {
+	err := s.DB.Delete(&dto.Form{}, form.ID).Error
+
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
+}

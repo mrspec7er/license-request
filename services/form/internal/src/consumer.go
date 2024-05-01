@@ -30,6 +30,9 @@ func (c Consumer) Load() {
 	wg.Add(1)
 	go c.Create(ch, &wg, exName+".create", exName+".create"+serverID)
 
+	wg.Add(1)
+	go c.Delete(ch, &wg, exName+".delete", exName+".delete"+serverID)
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	<-sig
@@ -67,5 +70,36 @@ func (c *Consumer) Create(ch *amqp091.Channel, wg *sync.WaitGroup, queue string,
 			continue
 		}
 		c.Hub.PublishLog(status, uid, form, "Create Form")
+	}
+}
+
+func (c *Consumer) Delete(ch *amqp091.Channel, wg *sync.WaitGroup, queue string, tag string) {
+	defer wg.Done()
+
+	messages, err := ch.ConsumeWithContext(context.Background(), queue, tag, true, false, false, false, nil)
+	if err != nil {
+		c.Hub.PublishLog(500, "", nil, "Failed to get messages from queue")
+	}
+
+	for data := range messages {
+		uid, ok := data.Headers["uid"].(string)
+		if !ok {
+			c.Hub.PublishLog(400, "", nil, "User ID undefine")
+			continue
+		}
+
+		form := &dto.Form{}
+		err := json.Unmarshal(data.Body, &form)
+		if err != nil {
+			c.Hub.PublishLog(400, uid, form, "Invalid data type")
+			continue
+		}
+
+		status, err := c.Service.Delete(form)
+		if err != nil {
+			c.Hub.PublishLog(status, uid, form, err.Error())
+			continue
+		}
+		c.Hub.PublishLog(status, uid, form, "Delete Form")
 	}
 }

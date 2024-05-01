@@ -81,3 +81,19 @@ func (p Publisher) Create(form dto.Form, uid string) error {
 
 	return nil
 }
+
+func (p Publisher) Delete(form dto.Form, uid string) error {
+	data, err := json.Marshal(form)
+	if err != nil {
+		return err
+	}
+
+	exName := os.Getenv("EXCHANGE_NAME")
+
+	err = p.Publish(exName+".delete", data, uid)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

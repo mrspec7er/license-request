@@ -28,17 +28,36 @@ func (c Controller) GetOne(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	form := &dto.Form{}
+	user := r.Context().Value(dto.UserContextKey).(dto.User)
 
 	if err := json.NewDecoder(r.Body).Decode(&form); err != nil {
 		c.Response.BadRequestHandler(w)
 		return
 	}
 
-	err := c.Publish.Create(*form, "123")
+	err := c.Publish.Create(*form, user.ID)
 	if err != nil {
 		c.Response.GeneralErrorHandler(w, 500, err)
 		return
 	}
 
 	c.Response.MutationSuccessResponse(w, "Create form submitted")
+}
+
+func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
+	form := &dto.Form{}
+	user := r.Context().Value(dto.UserContextKey).(dto.User)
+
+	if err := json.NewDecoder(r.Body).Decode(&form); err != nil {
+		c.Response.BadRequestHandler(w)
+		return
+	}
+
+	err := c.Publish.Delete(*form, user.ID)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, 500, err)
+		return
+	}
+
+	c.Response.MutationSuccessResponse(w, "Delete form submitted")
 }
