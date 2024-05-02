@@ -28,10 +28,16 @@ func (c Consumer) Load() {
 	serverID := os.Getenv("SERVER_ID")
 
 	wg.Add(1)
-	go c.Create(ch, &wg, exName+".create", exName+".create"+serverID)
+	go func() {
+		defer wg.Done()
+		c.Create(ch, exName+".create", exName+".create"+serverID)
+	}()
 
 	wg.Add(1)
-	go c.Delete(ch, &wg, exName+".delete", exName+".delete"+serverID)
+	go func() {
+		defer wg.Done()
+		go c.Delete(ch, exName+".delete", exName+".delete"+serverID)
+	}()
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
@@ -42,9 +48,7 @@ func (c Consumer) Load() {
 	fmt.Println("All consumers closed.")
 }
 
-func (c *Consumer) Create(ch *amqp091.Channel, wg *sync.WaitGroup, queue string, tag string) {
-	defer wg.Done()
-
+func (c *Consumer) Create(ch *amqp091.Channel, queue string, tag string) {
 	messages, err := ch.ConsumeWithContext(context.Background(), queue, tag, true, false, false, false, nil)
 	if err != nil {
 		c.Hub.PublishLog(500, "", nil, "Failed to get messages from queue")
@@ -73,8 +77,7 @@ func (c *Consumer) Create(ch *amqp091.Channel, wg *sync.WaitGroup, queue string,
 	}
 }
 
-func (c *Consumer) Delete(ch *amqp091.Channel, wg *sync.WaitGroup, queue string, tag string) {
-	defer wg.Done()
+func (c *Consumer) Delete(ch *amqp091.Channel, queue string, tag string) {
 
 	messages, err := ch.ConsumeWithContext(context.Background(), queue, tag, true, false, false, false, nil)
 	if err != nil {

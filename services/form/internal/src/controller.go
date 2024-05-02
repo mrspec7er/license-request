@@ -3,7 +3,9 @@ package src
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/mrspec7er/license-request-utility/dto"
 	"github.com/mrspec7er/license-request-utility/response"
 )
@@ -15,9 +17,17 @@ type Controller struct {
 }
 
 func (c Controller) GetOne(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, 400, err)
+		return
+	}
+
 	forms := &dto.Form{}
 
-	status, err := c.Service.GetOne(forms)
+	status, err := c.Service.GetOne(forms, uint(id))
 	if err != nil {
 		c.Response.GeneralErrorHandler(w, status, err)
 		return

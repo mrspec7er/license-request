@@ -9,8 +9,8 @@ type Service struct {
 	DB *gorm.DB
 }
 
-func (s Service) GetOne(form *dto.Form) (int, error) {
-	err := s.DB.Preload("Sections").Preload("Sections.Fields").First(&form).Error
+func (s Service) GetOne(form *dto.Form, id uint) (int, error) {
+	err := s.DB.Preload("Sections").Preload("Sections.Fields").First(&form, id).Error
 
 	if err != nil {
 		return 500, err
