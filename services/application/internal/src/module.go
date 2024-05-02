@@ -7,8 +7,8 @@ import (
 )
 
 func Module(db *gorm.DB, memcache *redis.Client) func(chi.Router) {
-	c := ApplicationController{
-		Service: ApplicationService{
+	c := Controller{
+		Service: Service{
 			DB: db,
 			Util: &ApplicationUtil{
 				Memcache: memcache,
