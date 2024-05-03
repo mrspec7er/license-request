@@ -25,7 +25,7 @@ func (s Service) GetOne(app *dto.Form, number string) (int, error) {
 }
 
 func (s Service) Create(app *dto.Application) (int, error) {
-	err := s.DB.Save(&app).Error
+	err := s.DB.Create(&app).Error
 
 	if err != nil {
 		return 500, err
@@ -34,8 +34,8 @@ func (s Service) Create(app *dto.Application) (int, error) {
 	return 200, nil
 }
 
-func (s Service) Delete(app *dto.Application, number string) (int, error) {
-	err := s.DB.Delete(&dto.Application{}, number).Error
+func (s Service) Delete(app *dto.Application) (int, error) {
+	err := s.DB.Where("number = ?", app.Number).Delete(app).Error
 
 	if err != nil {
 		return 500, err
