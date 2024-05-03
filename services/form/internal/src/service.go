@@ -20,7 +20,7 @@ func (s Service) GetOne(form *dto.Form, id uint) (int, error) {
 }
 
 func (s Service) Create(form *dto.Form) (int, error) {
-	err := s.DB.Save(&form).Error
+	err := s.DB.Create(&form).Error
 
 	if err != nil {
 		return 500, err
