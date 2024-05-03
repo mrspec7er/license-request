@@ -9,11 +9,11 @@ import (
 	"github.com/mrspec7er/license-request-utility/dto"
 )
 
-type ApplicationMiddleware struct {
+type Middleware struct {
 	Util *ApplicationUtil
 }
 
-func (m ApplicationMiddleware) Authorize(roles ...string) func(http.Handler) http.Handler {
+func (m Middleware) Authorize(roles ...string) func(http.Handler) http.Handler {
 	return (func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authKey, err := m.GetUserAuthKey(r)
@@ -48,7 +48,7 @@ func (m ApplicationMiddleware) Authorize(roles ...string) func(http.Handler) htt
 	})
 }
 
-func (m ApplicationMiddleware) GetUserAuthKey(r *http.Request) (string, error) {
+func (m Middleware) GetUserAuthKey(r *http.Request) (string, error) {
 	cookie, err := r.Cookie(string(dto.AuthCookieName))
 	if err != nil {
 		return "", err
@@ -57,7 +57,7 @@ func (m ApplicationMiddleware) GetUserAuthKey(r *http.Request) (string, error) {
 	return cookie.Value, nil
 }
 
-func (m ApplicationMiddleware) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
+func (m Middleware) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
 	err := m.Util.MemcacheRetrieve(context.Background(), key, &user)
 	if err != nil {
 		return err

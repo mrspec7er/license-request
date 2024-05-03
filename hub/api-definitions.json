@@ -68,6 +68,24 @@
       }
     },
     {
+      "name": "application.delete",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "application.create",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
       "name": "form.delete",
       "vhost": "/",
       "durable": true,
@@ -120,6 +138,22 @@
     }
   ],
   "bindings": [
+    {
+      "source": "application",
+      "vhost": "/",
+      "destination": "application.create",
+      "destination_type": "queue",
+      "routing_key": "application.create",
+      "arguments": {}
+    },
+    {
+      "source": "application",
+      "vhost": "/",
+      "destination": "application.delete",
+      "destination_type": "queue",
+      "routing_key": "application.delete",
+      "arguments": {}
+    },
     {
       "source": "form",
       "vhost": "/",

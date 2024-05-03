@@ -15,13 +15,15 @@ func Module(db *gorm.DB, memcache *redis.Client) func(chi.Router) {
 			},
 		},
 	}
-	u := ApplicationMiddleware{
+	u := Middleware{
 		Util: &ApplicationUtil{
 			Memcache: memcache,
 		},
 	}
 
 	return func(r chi.Router) {
-		r.With(u.Authorize()).Get("/{number}", c.GetAll)
+		r.With(u.Authorize()).Get("/{number}", c.GetOne)
+		r.With(u.Authorize()).Post("/", c.Create)
+		r.With(u.Authorize()).Delete("/", c.Delete)
 	}
 }
