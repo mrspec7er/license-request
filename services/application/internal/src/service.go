@@ -46,7 +46,7 @@ func (s Service) Delete(app *dto.Application) (int, error) {
 
 func (s Service) ApplicationAccessGuard(number string, user dto.User) (int, error) {
 	app := &dto.Application{}
-	err := s.DB.First(app, number).Error
+	err := s.DB.Where("number = ?", number).First(app).Error
 
 	if err != nil {
 		return 400, err
