@@ -68,8 +68,6 @@ func (c *Consumer) Create(ch *amqp091.Channel, queue string, tag string) {
 			continue
 		}
 
-		fmt.Println("APPLICATION_REQUEST", app)
-
 		status, err := c.Service.Create(app)
 		if err != nil {
 			c.Hub.PublishLog(status, uid, app, err.Error())
