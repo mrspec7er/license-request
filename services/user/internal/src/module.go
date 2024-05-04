@@ -6,15 +6,23 @@ import (
 	"gorm.io/gorm"
 )
 
-func Module(db *gorm.DB, memcache *redis.Client) func(chi.Router) {
+func Module(DB *gorm.DB, Memcache *redis.Client) func(chi.Router) {
+	cs := Consumer{
+		Service: Service{
+			DB: DB,
+		},
+	}
+
+	go cs.Load()
+
 	store := AuthInit()
 
 	c := Controller{
 		Service: Service{
-			DB:    db,
+			DB:    DB,
 			Store: store,
 			Util: &Utility{
-				Memcache: memcache,
+				Memcache: Memcache,
 			},
 		},
 	}

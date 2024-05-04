@@ -2,6 +2,7 @@ package src
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -40,7 +41,7 @@ type Service struct {
 	Util  *Utility
 }
 
-func (s Service) GetUserEmail(r *http.Request, userEmail *string) error {
+func (s *Service) GetUserEmail(r *http.Request, userEmail *string) error {
 	session, err := s.Store.Get(r, string(dto.AuthCookieName))
 	if err != nil {
 		return err
@@ -56,7 +57,7 @@ func (s Service) GetUserEmail(r *http.Request, userEmail *string) error {
 	return nil
 }
 
-func (s Service) FindUser(user *dto.User) (int, error) {
+func (s *Service) FindUser(user *dto.User) (int, error) {
 	err := s.DB.Where("email = ?", user.Email).First(&user).Error
 
 	if err != nil {
@@ -66,7 +67,7 @@ func (s Service) FindUser(user *dto.User) (int, error) {
 	return 200, nil
 }
 
-func (s Service) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*goth.User, error) {
+func (s *Service) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*goth.User, error) {
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
 		return nil, err
@@ -82,7 +83,7 @@ func (s Service) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*goth
 	return &user, nil
 }
 
-func (s Service) StoreUserSessions(w http.ResponseWriter, r *http.Request, user *goth.User) error {
+func (s *Service) StoreUserSessions(w http.ResponseWriter, r *http.Request, user *goth.User) error {
 	data, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
 		return err
@@ -112,7 +113,7 @@ func (s Service) StoreUserSessions(w http.ResponseWriter, r *http.Request, user 
 	return nil
 }
 
-func (s Service) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
+func (s *Service) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
 
 	err := s.Util.Retrieve(context.Background(), key, &user)
 	if err != nil {
@@ -122,9 +123,22 @@ func (s Service) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, ke
 	return nil
 }
 
-func (s Service) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
+func (s *Service) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
 	session, _ := s.Store.Get(r, string(dto.AuthCookieName))
 	session.Values["email"] = nil
 	session.Save(r, w)
 	gothic.Logout(w, r)
+}
+
+func (s *Service) Create(user *dto.User) (int, error) {
+	userExist := &dto.User{}
+	err := s.DB.Where("email = ?", user.Email).First(&userExist).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		err = s.DB.Create(&user).Error
+		if err != nil {
+			return 500, err
+		}
+	}
+
+	return 200, nil
 }

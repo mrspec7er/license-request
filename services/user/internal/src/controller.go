@@ -1,7 +1,6 @@
 package src
 
 import (
-	"encoding/json"
 	"net/http"
 	"text/template"
 
@@ -9,10 +8,13 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/mrspec7er/license-request-utility/dto"
+	"github.com/mrspec7er/license-request-utility/response"
 )
 
 type Controller struct {
-	Service Service
+	Service  Service
+	Publish  Publisher
+	Response response.ResponseJSON
 }
 
 func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
@@ -28,9 +30,21 @@ func (c *Controller) Callback(w http.ResponseWriter, r *http.Request) {
 	user := &goth.User{}
 	err := c.Service.StoreUserSessions(w, r, user)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		c.Response.GeneralErrorHandler(w, 400, err)
+		return
+	}
+
+	userEntry := &dto.User{
+		ID:            user.UserID,
+		Picture:       user.AvatarURL,
+		Email:         user.Email,
+		VerifiedEmail: true,
+		Role:          "USER",
+	}
+
+	err = c.Publish.Create(userEntry, user.UserID)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, 400, err)
 		return
 	}
 	t, _ := template.ParseFiles("templates/success.html")
@@ -43,14 +57,10 @@ func (c *Controller) Info(w http.ResponseWriter, r *http.Request) {
 
 	err := c.Service.RetrieveUserSessions(w, r, authKey, user)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(map[string]string{"message": err.Error()})
+		c.Response.GeneralErrorHandler(w, 400, err)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode(user)
+	c.Response.QuerySuccessResponse(w, nil, user, nil)
 }
 
 func (c *Controller) Logout(w http.ResponseWriter, r *http.Request) {
