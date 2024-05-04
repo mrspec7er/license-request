@@ -9,11 +9,11 @@ import (
 	"github.com/mrspec7er/license-request-utility/dto"
 )
 
-type AuthMiddleware struct {
-	Service AuthService
+type Middleware struct {
+	Service Service
 }
 
-func (m AuthMiddleware) Authorize(roles ...string) func(http.Handler) http.Handler {
+func (m *Middleware) Authorize(roles ...string) func(http.Handler) http.Handler {
 	return (func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var userEmail string

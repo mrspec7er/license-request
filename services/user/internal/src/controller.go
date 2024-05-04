@@ -11,20 +11,20 @@ import (
 	"github.com/mrspec7er/license-request-utility/dto"
 )
 
-type AuthController struct {
-	Service AuthService
+type Controller struct {
+	Service Service
 }
 
-func (c *AuthController) Index(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/index.html")
 	t.Execute(w, false)
 }
 
-func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	gothic.BeginAuthHandler(w, r)
 }
 
-func (c *AuthController) Callback(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Callback(w http.ResponseWriter, r *http.Request) {
 	user := &goth.User{}
 	err := c.Service.StoreUserSessions(w, r, user)
 	if err != nil {
@@ -37,7 +37,7 @@ func (c *AuthController) Callback(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, user)
 }
 
-func (c *AuthController) Info(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Info(w http.ResponseWriter, r *http.Request) {
 	authKey := chi.URLParam(r, "authKey")
 	user := &dto.User{}
 
@@ -53,7 +53,7 @@ func (c *AuthController) Info(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func (c *AuthController) Logout(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Logout(w http.ResponseWriter, r *http.Request) {
 	c.Service.RemoveUserSessions(w, r)
 	w.Header().Set("Location", "/api/auth/index")
 	w.WriteHeader(http.StatusTemporaryRedirect)

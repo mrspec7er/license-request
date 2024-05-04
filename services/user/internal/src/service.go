@@ -34,13 +34,13 @@ func AuthInit() *sessions.CookieStore {
 	return store
 }
 
-type AuthService struct {
+type Service struct {
 	DB    *gorm.DB
 	Store *sessions.CookieStore
-	Util  *AuthUtility
+	Util  *Utility
 }
 
-func (s AuthService) GetUserEmail(r *http.Request, userEmail *string) error {
+func (s Service) GetUserEmail(r *http.Request, userEmail *string) error {
 	session, err := s.Store.Get(r, string(dto.AuthCookieName))
 	if err != nil {
 		return err
@@ -56,7 +56,7 @@ func (s AuthService) GetUserEmail(r *http.Request, userEmail *string) error {
 	return nil
 }
 
-func (s AuthService) FindUser(user *dto.User) (int, error) {
+func (s Service) FindUser(user *dto.User) (int, error) {
 	err := s.DB.Where("email = ?", user.Email).First(&user).Error
 
 	if err != nil {
@@ -66,7 +66,7 @@ func (s AuthService) FindUser(user *dto.User) (int, error) {
 	return 200, nil
 }
 
-func (s AuthService) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*goth.User, error) {
+func (s Service) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*goth.User, error) {
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (s AuthService) SaveUserSessions(w http.ResponseWriter, r *http.Request) (*
 	return &user, nil
 }
 
-func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, user *goth.User) error {
+func (s Service) StoreUserSessions(w http.ResponseWriter, r *http.Request, user *goth.User) error {
 	data, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
 		return err
@@ -112,7 +112,7 @@ func (s AuthService) StoreUserSessions(w http.ResponseWriter, r *http.Request, u
 	return nil
 }
 
-func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
+func (s Service) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
 
 	err := s.Util.Retrieve(context.Background(), key, &user)
 	if err != nil {
@@ -122,7 +122,7 @@ func (s AuthService) RetrieveUserSessions(w http.ResponseWriter, r *http.Request
 	return nil
 }
 
-func (s AuthService) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
+func (s Service) RemoveUserSessions(w http.ResponseWriter, r *http.Request) {
 	session, _ := s.Store.Get(r, string(dto.AuthCookieName))
 	session.Values["email"] = nil
 	session.Save(r, w)

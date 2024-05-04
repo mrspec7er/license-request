@@ -9,11 +9,11 @@ import (
 func Module(db *gorm.DB, memcache *redis.Client) func(chi.Router) {
 	store := AuthInit()
 
-	c := AuthController{
-		Service: AuthService{
+	c := Controller{
+		Service: Service{
 			DB:    db,
 			Store: store,
-			Util: &AuthUtility{
+			Util: &Utility{
 				Memcache: memcache,
 			},
 		},

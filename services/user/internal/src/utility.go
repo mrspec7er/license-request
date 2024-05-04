@@ -8,11 +8,11 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type AuthUtility struct {
+type Utility struct {
 	Memcache *redis.Client
 }
 
-func (u AuthUtility) Store(ctx context.Context, key string, value any) error {
+func (u Utility) Store(ctx context.Context, key string, value any) error {
 	stringifiedValue, err := json.Marshal(value)
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func (u AuthUtility) Store(ctx context.Context, key string, value any) error {
 	return nil
 }
 
-func (u AuthUtility) Retrieve(ctx context.Context, key string, result any) error {
+func (u Utility) Retrieve(ctx context.Context, key string, result any) error {
 	value, err := u.Memcache.Get(ctx, key).Result()
 	if err != nil {
 		return err
