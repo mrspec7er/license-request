@@ -55,6 +55,24 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	c.Response.MutationSuccessResponse(w, "Create form submitted")
 }
 
+func (c *Controller) UpdateStatus(w http.ResponseWriter, r *http.Request) {
+	app := &ChangeStatusInput{}
+	user := r.Context().Value(dto.UserContextKey).(dto.User)
+
+	if err := json.NewDecoder(r.Body).Decode(&app); err != nil {
+		c.Response.BadRequestHandler(w)
+		return
+	}
+
+	err := c.Publish.UpdateStatus(app, user.ID)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, 500, err)
+		return
+	}
+
+	c.Response.MutationSuccessResponse(w, "Update status submitted")
+}
+
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	app := &dto.Application{}
 	user := r.Context().Value(dto.UserContextKey).(dto.User)

@@ -25,8 +25,22 @@ func (s Service) GetOne(app *dto.Form, number string) (int, error) {
 }
 
 func (s Service) Create(app *dto.Application) (int, error) {
+	app.Status = string(dto.RequestNew)
 	err := s.DB.Create(&app).Error
 
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
+}
+
+func (s Service) ChangeStatus(number string, status string, note string, uid string) (int, error) {
+	if status != string(dto.RequestApproved) && status != string(dto.RequestRejected) {
+		return 400, errors.New("invalid status type")
+	}
+
+	err := s.DB.Model(&dto.Application{}).Where("number = ?", number).Updates(&dto.Application{Status: status, ApprovedBy: uid, Note: note}).Error
 	if err != nil {
 		return 500, err
 	}

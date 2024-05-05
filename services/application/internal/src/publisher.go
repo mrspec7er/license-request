@@ -3,6 +3,7 @@ package src
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/mrspec7er/license-request-utility/dto"
@@ -75,6 +76,23 @@ func (p Publisher) Create(app *dto.Application, uid string) error {
 	exName := os.Getenv("EXCHANGE_NAME")
 
 	err = p.Publish(exName+".create", data, uid)
+	if err != nil {
+		return err
+	}
+	fmt.Println("APPS_PUBLISHER: ", data)
+
+	return nil
+}
+
+func (p Publisher) UpdateStatus(app *ChangeStatusInput, uid string) error {
+	data, err := json.Marshal(app)
+	if err != nil {
+		return err
+	}
+
+	exName := os.Getenv("EXCHANGE_NAME")
+
+	err = p.Publish(exName+".status", data, uid)
 	if err != nil {
 		return err
 	}

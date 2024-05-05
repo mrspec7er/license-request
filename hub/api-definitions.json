@@ -59,6 +59,15 @@
   "policies": [],
   "queues": [
     {
+      "name": "application.status",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
       "name": "form.create",
       "vhost": "/",
       "durable": true,
@@ -172,6 +181,14 @@
       "destination": "application.delete",
       "destination_type": "queue",
       "routing_key": "application.delete",
+      "arguments": {}
+    },
+    {
+      "source": "application",
+      "vhost": "/",
+      "destination": "application.status",
+      "destination_type": "queue",
+      "routing_key": "application.status",
       "arguments": {}
     },
     {

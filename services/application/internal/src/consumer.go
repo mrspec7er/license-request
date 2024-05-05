@@ -39,6 +39,12 @@ func (c Consumer) Load() {
 		go c.Delete(ch, exName+".delete", exName+".delete"+serverID)
 	}()
 
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		go c.UpdateStatus(ch, exName+".status", exName+".status"+serverID)
+	}()
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	<-sig
@@ -73,7 +79,37 @@ func (c *Consumer) Create(ch *amqp091.Channel, queue string, tag string) {
 			c.Hub.PublishLog(status, uid, app, err.Error())
 			continue
 		}
+		fmt.Println("APPS: ", *app)
 		c.Hub.PublishLog(status, uid, app, "Create Application")
+	}
+}
+
+func (c *Consumer) UpdateStatus(ch *amqp091.Channel, queue string, tag string) {
+	messages, err := ch.ConsumeWithContext(context.Background(), queue, tag, true, false, false, false, nil)
+	if err != nil {
+		c.Hub.PublishLog(500, "", nil, "Failed to get messages from queue")
+	}
+
+	for data := range messages {
+		uid, ok := data.Headers["uid"].(string)
+		if !ok {
+			c.Hub.PublishLog(400, "", nil, "User ID undefine")
+			continue
+		}
+
+		app := &ChangeStatusInput{}
+		err := json.Unmarshal(data.Body, &app)
+		if err != nil {
+			c.Hub.PublishLog(400, uid, app, "Invalid data type")
+			continue
+		}
+
+		status, err := c.Service.ChangeStatus(app.Number, app.Status, app.Note, uid)
+		if err != nil {
+			c.Hub.PublishLog(status, uid, app, err.Error())
+			continue
+		}
+		c.Hub.PublishLog(status, uid, app, "Update Status")
 	}
 }
 
