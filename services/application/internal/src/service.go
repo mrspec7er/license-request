@@ -9,7 +9,7 @@ import (
 
 type Service struct {
 	DB   *gorm.DB
-	Util *ApplicationUtil
+	Util *Util
 }
 
 func (s Service) GetOne(app *dto.Form, number string) (int, error) {

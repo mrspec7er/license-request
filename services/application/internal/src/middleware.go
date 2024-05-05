@@ -10,7 +10,7 @@ import (
 )
 
 type Middleware struct {
-	Util *ApplicationUtil
+	Util *Util
 }
 
 func (m Middleware) Authorize(roles ...string) func(http.Handler) http.Handler {

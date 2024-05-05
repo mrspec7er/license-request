@@ -3,7 +3,6 @@ package src
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/mrspec7er/license-request-utility/dto"
@@ -79,7 +78,6 @@ func (p Publisher) Create(app *dto.Application, uid string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("APPS_PUBLISHER: ", data)
 
 	return nil
 }

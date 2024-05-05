@@ -18,13 +18,13 @@ func Module(DB *gorm.DB, memcache *redis.Client) func(chi.Router) {
 	c := Controller{
 		Service: Service{
 			DB: DB,
-			Util: &ApplicationUtil{
+			Util: &Util{
 				Memcache: memcache,
 			},
 		},
 	}
 	u := Middleware{
-		Util: &ApplicationUtil{
+		Util: &Util{
 			Memcache: memcache,
 		},
 	}
