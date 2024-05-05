@@ -24,6 +24,16 @@ func (s Service) GetOne(app *dto.Form, number string) (int, error) {
 	return 200, nil
 }
 
+func (s Service) GetAll(apps *[]*dto.Application, number string) (int, error) {
+	err := s.DB.Preload("User").Find(&apps).Error
+
+	if err != nil {
+		return 400, err
+	}
+
+	return 200, nil
+}
+
 func (s Service) Create(app *dto.Application) (int, error) {
 	app.Status = string(dto.RequestNew)
 	err := s.DB.Create(&app).Error

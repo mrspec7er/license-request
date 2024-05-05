@@ -35,6 +35,19 @@ func (c Controller) GetOne(w http.ResponseWriter, r *http.Request) {
 	c.Response.QuerySuccessResponse(w, nil, app, nil)
 }
 
+func (c Controller) GetAll(w http.ResponseWriter, r *http.Request) {
+	number := chi.URLParam(r, "number")
+	apps := []*dto.Application{}
+
+	status, err := c.Service.GetAll(&apps, number)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, status, err)
+		return
+	}
+
+	c.Response.QuerySuccessResponse(w, nil, apps, nil)
+}
+
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	app := &dto.Application{}
 	user := r.Context().Value(dto.UserContextKey).(dto.User)
