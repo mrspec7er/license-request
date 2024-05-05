@@ -34,6 +34,8 @@ github.com/mrspec7er/license-request-utility v1.0.8 h1:P9idYaIDk3AQwhu3jkthL0m1b
 github.com/mrspec7er/license-request-utility v1.0.8/go.mod h1:4ES8KIIhQ6tE2PooO57q+K4cnOBk0AmWPIjlGLeEIJI=
 github.com/mrspec7er/license-request-utility v1.0.9 h1:z6ErSZ2WlY9GECioOEafiGHbYftb//KB0oM+ahFNFQw=
 github.com/mrspec7er/license-request-utility v1.0.9/go.mod h1:4ES8KIIhQ6tE2PooO57q+K4cnOBk0AmWPIjlGLeEIJI=
+github.com/mrspec7er/license-request-utility v1.0.11 h1:4F582bpNJCrm/pVXDnwNyOQ74ru0KQjvlgM+8KrNUTw=
+github.com/mrspec7er/license-request-utility v1.0.11/go.mod h1:4ES8KIIhQ6tE2PooO57q+K4cnOBk0AmWPIjlGLeEIJI=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rabbitmq/amqp091-go v1.9.0 h1:qrQtyzB4H8BQgEuJwhmVQqVHB9O4+MNDJCCAcpc3Aoo=
