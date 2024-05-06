@@ -86,6 +86,15 @@
       }
     },
     {
+      "name": "logger.notification",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
       "name": "user.create",
       "vhost": "/",
       "durable": true,
@@ -213,6 +222,14 @@
       "destination": "logger.create",
       "destination_type": "queue",
       "routing_key": "logger.create",
+      "arguments": {}
+    },
+    {
+      "source": "logger",
+      "vhost": "/",
+      "destination": "logger.notification",
+      "destination_type": "queue",
+      "routing_key": "logger.notification",
       "arguments": {}
     },
     {
