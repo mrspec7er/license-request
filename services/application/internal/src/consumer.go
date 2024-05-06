@@ -109,7 +109,7 @@ func (c *Consumer) UpdateStatus(ch *amqp091.Channel, queue string, tag string) {
 			c.Hub.PublishLog(status, uid, app, err.Error())
 			continue
 		}
-		c.Hub.PublishLog(status, uid, app, "Update Status")
+		c.Hub.SentNotification(status, uid, app, "Update Status")
 	}
 }
 
