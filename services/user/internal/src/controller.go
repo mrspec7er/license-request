@@ -68,3 +68,15 @@ func (c *Controller) Logout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Location", "/api/auth/index")
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
+
+func (c *Controller) GetOne(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "uid")
+	user := &dto.User{}
+
+	status, err := c.Service.GetOne(user, uid)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, status, err)
+		return
+	}
+	c.Response.QuerySuccessResponse(w, nil, user, nil)
+}

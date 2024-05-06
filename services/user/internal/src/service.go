@@ -142,3 +142,12 @@ func (s *Service) Create(user *dto.User) (int, error) {
 
 	return 200, nil
 }
+
+func (s *Service) GetOne(user *dto.User, uid string) (int, error) {
+	err := s.DB.Where("id = ?", uid).First(&user).Error
+	if err != nil {
+		return 400, err
+	}
+
+	return 200, nil
+}
