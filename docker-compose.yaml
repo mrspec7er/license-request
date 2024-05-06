@@ -142,6 +142,34 @@ services:
         - action: rebuild
           path: ./services/application/go.mod
 
+  logger:
+    depends_on:
+      database:
+        condition: service_healthy
+      memcache:
+        condition: service_healthy
+      hub:
+        condition: service_healthy
+      utility:
+        condition: service_started
+    build:
+      context: ./services/logger
+      dockerfile: Dockerfile
+    container_name: logger
+    restart: always
+    ports:
+      - 8083:8083
+    develop:
+      watch:
+        - action: sync
+          path: ./services/logger
+          target: /services/logger
+          ignore:
+            - main
+            - tmp
+        - action: rebuild
+          path: ./services/logger/go.mod
+
   # proxy:
   #   depends_on:
   #     - server
