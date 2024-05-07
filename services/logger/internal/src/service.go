@@ -2,8 +2,9 @@ package src
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/smtp"
+	"os"
 
 	"github.com/mrspec7er/license-request-utility/dto"
 	"gorm.io/gorm"
@@ -33,6 +34,17 @@ func (s Service) SendNotification(log *dto.Logger) (int, error) {
 		return 400, err
 	}
 
-	fmt.Println("RESULT: ", *user.Data)
+	message := []byte(log.Message)
+
+	to := []string{
+		user.Data.Email,
+	}
+
+	smtpAuth := smtp.PlainAuth("", os.Getenv("SMTP_EMAIL"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_HOST"))
+
+	err = smtp.SendMail(os.Getenv("SMTP_HOST")+":"+os.Getenv("SMTP_PORT"), smtpAuth, os.Getenv("SMTP_EMAIL"), to, message)
+	if err != nil {
+		return 400, err
+	}
 	return 200, nil
 }
