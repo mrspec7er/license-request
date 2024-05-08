@@ -38,7 +38,8 @@ func (p Publisher) PublishLog(status int, uid string, reqPayload any, message st
 		Body:        body,
 	}
 
-	err = ch.PublishWithContext(context.Background(), os.Getenv("LOGGER_EXCHANGE"), os.Getenv("LOGGER_QUEUE"), false, false, payload)
+	exName := os.Getenv("LOGGER_EXCHANGE")
+	err = ch.PublishWithContext(context.Background(), exName, exName+".create", false, false, payload)
 	if err != nil {
 		return err
 	}
