@@ -170,13 +170,17 @@ services:
         - action: rebuild
           path: ./services/logger/go.mod
 
-  # proxy:
-  #   depends_on:
-  #     - server
-  #   build: ./proxy
-  #   container_name: proxy
-  #   ports:
-  #     - 8000:8000
+  proxy:
+    depends_on:
+      - utility
+      - user
+      - form
+      - application
+      - logger
+    build: ./proxy
+    container_name: proxy
+    ports:
+      - 3000:3000
 
 volumes:
   db:
