@@ -18,7 +18,7 @@ func (s Server) RegisterRoutes() http.Handler {
 		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(map[string]string{"message": "Hello There!"})
 	})
-	router.Route("/auth", src.Module(s.DB, s.Memcache))
+	router.Route("/loggers", src.Module(s.DB, s.Memcache))
 
 	return router
 }
