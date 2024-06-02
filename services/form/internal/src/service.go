@@ -2,15 +2,25 @@ package src
 
 import (
 	"github.com/mrspec7er/license-request-utility/dto"
-	"gorm.io/gorm"
+	"github.com/mrspec7er/license-request/services/form/internal/db"
 )
 
 type Service struct {
-	DB *gorm.DB
+	Store db.Repository[*dto.Form]
 }
 
 func (s Service) GetOne(form *dto.Form, id uint) (int, error) {
-	err := s.DB.Preload("Sections").Preload("Sections.Fields").First(&form, id).Error
+	err := s.Store.GetOne(form, id)
+
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
+}
+
+func (s Service) GetAll(form *[]*dto.Form) (int, error) {
+	err := s.Store.GetAll(form)
 
 	if err != nil {
 		return 500, err
@@ -20,8 +30,7 @@ func (s Service) GetOne(form *dto.Form, id uint) (int, error) {
 }
 
 func (s Service) Create(form *dto.Form) (int, error) {
-	err := s.DB.Create(&form).Error
-
+	err := s.Store.Create(form)
 	if err != nil {
 		return 500, err
 	}
@@ -30,7 +39,7 @@ func (s Service) Create(form *dto.Form) (int, error) {
 }
 
 func (s Service) Delete(form *dto.Form) (int, error) {
-	err := s.DB.Delete(&dto.Form{}, form.ID).Error
+	err := s.Store.Delete(&dto.Form{}, form.ID)
 
 	if err != nil {
 		return 500, err

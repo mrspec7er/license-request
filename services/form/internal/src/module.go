@@ -2,14 +2,16 @@ package src
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/mrspec7er/license-request/services/form/internal/db"
 	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
 )
 
-func ControllerModule(DB *gorm.DB, Memcache *redis.Client) func(chi.Router) {
+func ControllerModule(DB *db.Conn, Memcache *redis.Client) func(chi.Router) {
 	cs := Consumer{
 		Service: Service{
-			DB: DB,
+			Store: db.FormRepository{
+				DB: DB,
+			},
 		},
 	}
 
@@ -17,7 +19,9 @@ func ControllerModule(DB *gorm.DB, Memcache *redis.Client) func(chi.Router) {
 
 	ct := Controller{
 		Service: Service{
-			DB: DB,
+			Store: db.FormRepository{
+				DB: DB,
+			},
 		},
 	}
 
@@ -28,6 +32,7 @@ func ControllerModule(DB *gorm.DB, Memcache *redis.Client) func(chi.Router) {
 	}
 
 	return func(r chi.Router) {
+		r.With(u.Authorize()).Get("/", ct.GetAll)
 		r.With(u.Authorize()).Get("/{id}", ct.GetOne)
 		r.With(u.Authorize()).Post("/", ct.Create)
 		r.With(u.Authorize()).Delete("/", ct.Delete)

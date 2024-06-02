@@ -5,12 +5,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/mrspec7er/license-request/services/form/internal/db"
 	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB       *gorm.DB
+	DB       *db.Conn
 	Memcache *redis.Client
 }
 

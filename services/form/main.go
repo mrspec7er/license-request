@@ -16,15 +16,15 @@ func init() {
 }
 
 func main() {
-	DB := db.StartConnection()
+	Conn := db.StartConnection()
 	Memcache := db.MemcacheConnection()
 
 	config := &internal.Server{
-		DB:       DB,
+		DB:       Conn,
 		Memcache: Memcache,
 	}
 
-	dbConn, err := DB.DB()
+	dbConn, err := Conn.DB.DB()
 	if err != nil {
 		panic(fmt.Sprintf("cannot start server: %s", err))
 	}

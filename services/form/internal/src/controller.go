@@ -36,6 +36,19 @@ func (c Controller) GetOne(w http.ResponseWriter, r *http.Request) {
 	c.Response.QuerySuccessResponse(w, nil, forms, nil)
 }
 
+func (c Controller) GetAll(w http.ResponseWriter, r *http.Request) {
+
+	forms := []*dto.Form{}
+
+	status, err := c.Service.GetAll(&forms)
+	if err != nil {
+		c.Response.GeneralErrorHandler(w, status, err)
+		return
+	}
+
+	c.Response.QuerySuccessResponse(w, nil, forms, nil)
+}
+
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	form := &dto.Form{}
 	user := r.Context().Value(dto.UserContextKey).(dto.User)
