@@ -25,13 +25,17 @@ func StartConnection() *Conn {
 	return &Conn{db}
 }
 
-func MemcacheConnection() *redis.Client {
-	memcache := redis.NewClient(&redis.Options{
+type CacheClient struct {
+	*redis.Client
+}
+
+func MemcacheConnection() *CacheClient {
+	client := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_ADDRESS"),
 		Password: os.Getenv("REDIS_USERNAME"),
 		Username: os.Getenv("REDIS_PASSWORD"),
 		DB:       0,
 	})
 
-	return memcache
+	return &CacheClient{client}
 }

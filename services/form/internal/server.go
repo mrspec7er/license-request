@@ -6,12 +6,11 @@ import (
 	"time"
 
 	"github.com/mrspec7er/license-request/services/form/internal/db"
-	"github.com/redis/go-redis/v9"
 )
 
 type Server struct {
 	DB       *db.Conn
-	Memcache *redis.Client
+	Memcache *db.CacheClient
 }
 
 func NewServer(s Server) *http.Server {

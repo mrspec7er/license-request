@@ -3,10 +3,9 @@ package src
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/mrspec7er/license-request/services/form/internal/db"
-	"github.com/redis/go-redis/v9"
 )
 
-func ControllerModule(DB *db.Conn, Memcache *redis.Client) func(chi.Router) {
+func ControllerModule(DB *db.Conn, Memcache *db.CacheClient) func(chi.Router) {
 	cs := Consumer{
 		Service: Service{
 			Store: db.FormRepository{
@@ -26,8 +25,8 @@ func ControllerModule(DB *db.Conn, Memcache *redis.Client) func(chi.Router) {
 	}
 
 	u := Middleware{
-		Util: &Util{
-			Memcache: Memcache,
+		Cache: db.RedisRepository{
+			Cache: Memcache,
 		},
 	}
 

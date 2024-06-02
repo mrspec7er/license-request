@@ -8,10 +8,11 @@ import (
 
 	"github.com/mrspec7er/license-request-utility/dto"
 	"github.com/mrspec7er/license-request-utility/response"
+	"github.com/mrspec7er/license-request/services/form/internal/db"
 )
 
 type Middleware struct {
-	Util     *Util
+	Cache    db.CacheRepository[*dto.User]
 	Response response.ResponseJSON
 }
 
@@ -54,7 +55,7 @@ func (m Middleware) GetUserAuthKey(r *http.Request) (string, error) {
 }
 
 func (m Middleware) RetrieveUserSessions(w http.ResponseWriter, r *http.Request, key string, user *dto.User) error {
-	err := m.Util.MemcacheRetrieve(context.Background(), key, &user)
+	err := m.Cache.Retrieve(context.Background(), key, user)
 	if err != nil {
 		return err
 	}
