@@ -4,11 +4,12 @@ import (
 	"errors"
 
 	"github.com/mrspec7er/license-request-utility/dto"
+	"github.com/mrspec7er/license-request/services/application/internal/db"
 	"gorm.io/gorm"
 )
 
 type Service struct {
-	DB   *gorm.DB
+	DB   *db.Conn
 	Util *Util
 }
 

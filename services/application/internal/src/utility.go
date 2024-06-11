@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/mrspec7er/license-request/services/application/internal/db"
 )
 
 type Util struct {
-	Memcache *redis.Client
+	Memcache *db.CacheClient
 }
 
 func (u Util) MemcacheStore(ctx context.Context, key string, value any) error {

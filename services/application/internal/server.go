@@ -5,13 +5,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
+	"github.com/mrspec7er/license-request/services/application/internal/db"
 )
 
 type Server struct {
-	DB       *gorm.DB
-	Memcache *redis.Client
+	DB       *db.Conn
+	Memcache *db.CacheClient
 }
 
 func NewServer(s Server) *http.Server {
