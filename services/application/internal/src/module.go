@@ -21,15 +21,10 @@ func Module(DB *db.Conn, memcache *db.CacheClient) func(chi.Router) {
 			Store: db.AppRepository{
 				DB: DB,
 			},
-			Util: &Util{
-				Memcache: memcache,
-			},
 		},
 	}
 	u := Middleware{
-		Util: &Util{
-			Memcache: memcache,
-		},
+		Cache: db.RedisRepository{Cache: memcache},
 	}
 
 	return func(r chi.Router) {

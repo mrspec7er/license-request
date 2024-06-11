@@ -11,7 +11,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mrspec7er/license-request-utility/dto"
 	"github.com/mrspec7er/license-request/services/application/internal/db"
-	"github.com/mrspec7er/license-request/services/application/internal/src"
 )
 
 type GetApplicationsResponse struct {
@@ -32,11 +31,11 @@ func TestCreateForm(t *testing.T) {
 
 	Memcache := db.MemcacheConnection()
 
-	util := &src.Util{
-		Memcache: Memcache,
+	util := &db.RedisRepository{
+		Cache: Memcache,
 	}
 
-	util.MemcacheStore(context.Background(), "mock-auth", dto.User{
+	util.Store(context.Background(), "mock-auth", &dto.User{
 		ID:            "108062360841627093205",
 		Email:         "test@Email.com",
 		VerifiedEmail: true,
@@ -86,11 +85,11 @@ func TestGetForm(t *testing.T) {
 
 	Memcache := db.MemcacheConnection()
 
-	util := &src.Util{
-		Memcache: Memcache,
+	util := &db.RedisRepository{
+		Cache: Memcache,
 	}
 
-	util.MemcacheStore(context.Background(), "mock-auth", dto.User{
+	util.Store(context.Background(), "mock-auth", &dto.User{
 		ID:            "108062360841627093205",
 		Email:         "test@Email.com",
 		VerifiedEmail: true,

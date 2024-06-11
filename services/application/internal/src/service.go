@@ -9,7 +9,6 @@ import (
 
 type Service struct {
 	Store db.Repository[*dto.Application, *dto.Form]
-	Util  *Util
 }
 
 func (s Service) GetOne(app *dto.Form, number string) (int, error) {
