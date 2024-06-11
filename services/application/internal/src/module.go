@@ -8,7 +8,9 @@ import (
 func Module(DB *db.Conn, memcache *db.CacheClient) func(chi.Router) {
 	cs := Consumer{
 		Service: Service{
-			DB: DB,
+			Store: db.AppRepository{
+				DB: DB,
+			},
 		},
 	}
 
@@ -16,7 +18,9 @@ func Module(DB *db.Conn, memcache *db.CacheClient) func(chi.Router) {
 
 	c := Controller{
 		Service: Service{
-			DB: DB,
+			Store: db.AppRepository{
+				DB: DB,
+			},
 			Util: &Util{
 				Memcache: memcache,
 			},
